@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: redis-down-alert
+  namespace: monitoring
+  labels:
+    release: monitoring
+spec:
+  groups:
+    - name: redis.rules
+      rules:
+        - alert: RedisDown
+          expr: redis_up == 0
+          for: 1m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Redis is down"
+            description: "Redis exporter reports Redis is unavailable."

@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: service-down-alert
+  namespace: monitoring
+  labels:
+    release: monitoring
+spec:
+  groups:
+    - name: service.rules
+      rules:
+        - alert: ServiceDown
+          expr: up == 0
+          for: 1m
+          labels:
+            severity: critical
+          annotations:
+            summary: "A monitored service is down"
+            description: "Prometheus target {{ $labels.job }} is down."
